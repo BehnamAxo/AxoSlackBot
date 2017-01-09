@@ -208,7 +208,6 @@ attachmentMaker: function (Body, axoBaseUrl, axosoftToken, myKeyWordExists, TEST
                     });
 },
 
-//TODO refactor this function!
 attachInteractiveButtons:function(attachArray, Body, data){
                             var txt, totalPage = Math.ceil((Body.metadata.total_count/Body.metadata.page_size));
                             (data == undefined) ? txt = undefined : txt = data.original_message.text;
@@ -220,7 +219,7 @@ attachInteractiveButtons:function(attachArray, Body, data){
                              };
 
                             if(Body.data.length >= 10 || (module.exports.currentPage(txt) == totalPage - 1) || Body.metadata.page == totalPage){
-                                  if(module.exports.currentPage(txt) == undefined && Body.metadata.page == 0){
+                                  if((module.exports.currentPage(txt) == undefined && Body.metadata.page == 0) || (module.exports.currentPage(txt) == "2" && data.actions[0].name == "previousPage" || Body.metadata.page == 1)){
                                         myObject.actions = [{
                                             name: "nextPage",
                                             text: "Next 10 Items",
@@ -228,44 +227,7 @@ attachInteractiveButtons:function(attachArray, Body, data){
                                             value: "nextPage"
                                         }];
                                         attachArray.push(myObject);
-                                  }else if(module.exports.currentPage(txt) == undefined && Body.metadata.page > 0 && Body.metadata.page != 1 && Body.metadata.page != totalPage){
-                                        myObject.actions = [{
-                                            name: "previousPage",
-                                            text: "Previous 10 Items",
-                                            type: "button",
-                                            value: "previousPage"
-                                            },{
-                                            name: "nextPage",
-                                            text: "Next 10 Items",
-                                            type: "button",
-                                            value: "nextPage"
-                                        }];
-                                        attachArray.push(myObject);
-                                  }else if(Body.metadata.page == 1){
-                                      myObject.actions = [{
-                                            name: "nextPage",
-                                            text: "Next 10 Items",
-                                            type: "button",
-                                            value: "nextPage"
-                                      }];
-                                      attachArray.push(myObject);
-                                  }else if(module.exports.currentPage(txt) == "2" && data.actions[0].name == "previousPage"){
-                                        myObject.actions = [{
-                                            name: "nextPage",
-                                            text: "Next 10 Items",
-                                            type: "button",
-                                            value: "nextPage"
-                                        }];
-                                        attachArray.push(myObject);
-                                  }else if(module.exports.currentPage(txt) == totalPage - 1){
-                                      myObject.actions = [{
-                                            name: "previousPage",
-                                            text: "Previous 10 Items",
-                                            type: "button",
-                                            value: "previousPage"
-                                      }];
-                                      attachArray.push(myObject);
-                                  }else if(Body.metadata.page == totalPage){
+                                  }else if(module.exports.currentPage(txt) == totalPage - 1 || Body.metadata.page == totalPage){
                                       myObject.actions = [{
                                             name: "previousPage",
                                             text: "Previous 10 Items",
